@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeIndiaVerse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .search-bar {
+            width: 80%;
+            padding: 10px;
+            margin: 20px;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .app-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .app-card img {
+            max-width: 100%;
+        }
+        .download-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to FreeIndiaVerse</h1>
+    <input type="text" class="search-bar" placeholder="Search Apps..." id="search">
+    <div class="app-grid" id="appGrid">
+        <!-- Apps will be dynamically added here -->
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="[invalid url, do not cite]
+    <script src="[invalid url, do not cite]
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to load apps
+        function loadApps() {
+            db.collection("apps").get().then((querySnapshot) => {
+                let appGrid = document.getElementById('appGrid');
+                appGrid.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    let app = doc.data();
+                    let card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.innerHTML = `
+                        <img src="${app.imageUrl}" alt="${app.name}">
+                        <h3>${app.name}</h3>
+                        <p>${app.description}</p>
+                        <a href="${app.apkUrl}" class="download-btn" download>Download</a>
+                    `;
+                    appGrid.appendChild(card);
+                });
+            });
+        }
+
+        // Initial load
+        loadApps();
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', (e) => {
+            let query = e.target.value.toLowerCase();
+            db.collection("apps").where("name", ">=", query).get().then((querySnapshot) => {
+                let appGrid = document.getElementById('appGrid');
+                appGrid.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    let app = doc.data();
+                    if (app.name.toLowerCase().includes(query)) {
+                        let card = document.createElement('div');
+                        card.className = 'app-card';
+                        card.innerHTML = `
+                            <img src="${app.imageUrl}" alt="${app.name}">
+                            <h3>${app.name}</h3>
+                            <p>${app.description}</p>
+                            <a href="${app.apkUrl}" class="download-btn" download>Download</a>
+                        `;
+                        appGrid.appendChild(card);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
